@@ -111,36 +111,24 @@ class Intervals(object):
             df.to_csv(f'{self.path}/{csv_name}', mode='w', header=True, index=False)
             print(f'Made {csv_name}')
 
-    def writer(self, f, overflow):
-        print(f"\nFor {f.split('/')[-1]}")
-        df_in = pd.read_csv(f)
+    def write(self, input_file, overflow):
+        df_in = pd.read_csv(input_file)
         data = np.array(df_in.Molecular_Weight)
-        interval_files = self.files()
 
-        intervals = []
-        for i in interval_files:
-            name0 = i.strip(".csv").split('/')[-1]
-            name1 = name0.split('_')
-            intervals.append(name1)
-        ints0 = np.array(intervals[1:], dtype=int)
-
-        for i in ints0:
-            path_this_interval = f"{self.path}/{i[0]}_{i[1]}.csv"
-
+        for i in self.intervalLimits():
             try:
-                #print(f"Adding to {i[0]}_{i[1]}.csv")
-                indicies = np.where((i[0] <= data) & (data <= i[1] + overflow))
+                indicies = np.where((i[0] - overflow <= data) & (data <= i[1] + overflow))
                 matches = df_in[indicies[0][0] : indicies[0][-1] + 1]
-                matches.to_csv(path_this_interval, mode='w', header=False, index=False)
+                matches.to_csv(f'{self.path}/{i[0]}_{i[1]}.csv', mode='a', header=False, index=False)
             except:
                 pass
 
             
-class Split(object):
+class Splits(object):
     def __init__(self):
         self.path = "/Users/etiennechollet/Desktop/GitHub/1A-Database/LexiChem/CSV_Splits"
     
-    def getFilenames(self):
+    def files(self):
         files = []
         for dirpath, dirnames, filenames in os.walk(path_csv_splits):
             for i in filenames:
