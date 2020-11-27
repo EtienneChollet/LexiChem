@@ -16,17 +16,22 @@ caffeine.on(display=False)
 
 t0 = time()
 
-cwd = os.path.dirname(__file__)
+
 #print('\n',cwd)
 
-def getIt(identifier):
-    #identifier = 'Compound_029500001_030000000'
-    if os.path.isfile(f'{cwd}/XMLGZ_Temp/{identifier}.xml.gz'): 
-        pass
-    else:
-        url = f'ftp://ftp.ncbi.nlm.nih.gov/pubchem/Compound/CURRENT-Full/XML/{identifier}.xml.gz'
-        request.urlretrieve(url, f'{cwd}/XMLGZ_Temp/{identifier}.xml.gz')
-    return identifier
+class Scraper(object):
+    def __init__(self):
+        self.cwd = os.path.dirname(__file__)
+        self.path_splits = "/Users/etiennechollet/Desktop/GitHub/1A-Database/LexiChem/CSV_Splits"
+
+    def getIt(identifier):
+        #identifier = 'Compound_029500001_030000000'
+        if os.path.isfile(f'{cwd}/XMLGZ_Temp/{identifier}.xml.gz'): 
+            pass
+        else:
+            url = f'ftp://ftp.ncbi.nlm.nih.gov/pubchem/Compound/CURRENT-Full/XML/{identifier}.xml.gz'
+            request.urlretrieve(url, f'{cwd}/XMLGZ_Temp/{identifier}.xml.gz')
+        return identifier
 
 
 def scraper(identifier):
