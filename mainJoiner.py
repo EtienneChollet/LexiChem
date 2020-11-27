@@ -1,14 +1,13 @@
 import csvJoiner as cj
 
 f = cj.getSplitFiles()
-f1 = f[1:10]
-
+f_range = f[1:10]
+f1 = f[1]
 
 cj.refreshAll()
-#cj.csvIntervalWriter(f1, 5)
 
-for i in f1:
+for i in f_range:
     cj.csvIntervalWriter(i, 5)
 
-#for i in f1:
-    #print(i)
+for i in f_range:
+    cj.sortInterval(i)

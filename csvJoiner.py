@@ -46,7 +46,7 @@ def csvSkeleton(a, b):
     arg2 = Upper range of mass interval"""
     df = pd.DataFrame(columns=['Molecular_Formula', 'Molecular_Weight'])
     csv_name = f"{a}_{b}.csv"
-    print(f'\nMade {csv_name}')
+    print(f'Made {csv_name}')
     df.to_csv(f'{path_csv_mass_intervals}/{csv_name}', mode='w', header=True, index=False)
 
 
@@ -61,6 +61,7 @@ def refreshAll():
     for interval in subintervals:
         csvSkeleton(interval[0], interval[1])
     csvSkeleton(5000, 10000)
+    print('\n')
 
 
 def csvIntervalWriter(f, overflow):
@@ -88,3 +89,7 @@ def csvIntervalWriter(f, overflow):
 
         matches.to_csv(path_this_interval, mode='a', header=False, index=False)
 
+
+def sortInterval(f):
+    df_in = pd.read_csv(f)
+    data = df_in.sort_values(by='Molecular_Weight')
