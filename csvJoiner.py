@@ -19,6 +19,8 @@ cwd = os.path.dirname(__file__)
 database = '/Users/etiennechollet/Desktop/GitHub/1A-Database/LexiChem'
 path_csv_splits = "/Users/etiennechollet/Desktop/GitHub/1A-Database/LexiChem/CSV_Splits"
 path_csv_mass_intervals = "/Users/etiennechollet/Desktop/GitHub/1A-Database/LexiChem/CSV_Mass_Intervals"
+path_master = "/Users/etiennechollet/Desktop/GitHub/1A-Database/LexiChem/CSV_Master/master.csv"
+
 
 
 def getSplitFiles():
@@ -93,3 +95,33 @@ def csvIntervalWriter(f, overflow):
 def sortInterval(f):
     df_in = pd.read_csv(f)
     data = df_in.sort_values(by='Molecular_Weight')
+
+
+def masterCsv(f):
+    #skel_df = pd.DataFrame(columns=['Molecular_Formula', 'Molecular_Weight'])
+    #skel_df.to_csv(path_master, mode='w', header=True, index=False)
+
+    print(f"\nFor {f.split('/')[-1]}")
+    in_df = pd.read_csv(f)
+    #print(in_df)
+    in_df.to_csv(path_master, mode='a', header=True, index=False)
+
+
+class Master(object):
+    def __init__(self):
+        self.path = "/Users/etiennechollet/Desktop/GitHub/1A-Database/LexiChem/CSV_Master/master.csv"
+
+    def refresh(self):
+        skel_df = pd.DataFrame(columns=['Molecular_Formula', 'Molecular_Weight'])
+        skel_df.to_csv(self.path, mode='w', header=True, index=False)
+
+    def updateFrom(self, f):
+        print(f"\nFor {f.split('/')[-1]}")
+        in_df = pd.read_csv(f)
+        #print(in_df)
+        in_df.to_csv(self.path, mode='a', header=False, index=False)
+
+    def sort(self):
+        in_df = pd.read_csv(self.path)
+        out_df = in_df.sort_values(by=['Molecular_Weight'])
+        out_df.to_csv(self.path, mode='w', header=True, index=False)
