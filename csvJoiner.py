@@ -22,7 +22,6 @@ path_csv_mass_intervals = "/Users/etiennechollet/Desktop/GitHub/1A-Database/Lexi
 path_master = "/Users/etiennechollet/Desktop/GitHub/1A-Database/LexiChem/CSV_Master/master.csv"
 
 
-
 def getSplitFiles():
     files = []
     for dirpath, dirnames, filenames in os.walk(path_csv_splits):
@@ -31,7 +30,6 @@ def getSplitFiles():
 
     sorted_files = sorted(files)
     return sorted_files
-
 
 def getIntervalFiles():
     files = []
@@ -42,7 +40,6 @@ def getIntervalFiles():
     sorted_files = sorted(files)
     return sorted_files
 
-
 def csvSkeleton(a, b):
     """arg1 = Lower range of mass interval
     arg2 = Upper range of mass interval"""
@@ -50,7 +47,6 @@ def csvSkeleton(a, b):
     csv_name = f"{a}_{b}.csv"
     print(f'Made {csv_name}')
     df.to_csv(f'{path_csv_mass_intervals}/{csv_name}', mode='w', header=True, index=False)
-
 
 def sortInterval(f):
     df_in = pd.read_csv(f)
