@@ -99,11 +99,17 @@ class Intervals(object):
                 fs.append(f"{self.path}/{i}")
 
         sorted_files = sorted(fs)
+        sorted_files.pop(0)
         return sorted_files
         
     def refreshAll(self):
+        df = pd.DataFrame(columns=['Molecular_Formula', 'Molecular_Weight'])
         for subinterval in self.intervalLimits():
-            csvSkeleton(subinterval[0], subinterval[1])
+            a = subinterval[0]
+            b = subinterval[1]
+            csv_name = f"{a}_{b}.csv"
+            df.to_csv(f'{self.path}/{csv_name}', mode='w', header=True, index=False)
+            print(f'Made {csv_name}')
 
     def writer(self, f, overflow):
         print(f"\nFor {f.split('/')[-1]}")
