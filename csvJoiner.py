@@ -21,7 +21,6 @@ path_csv_splits = "/Users/etiennechollet/Desktop/GitHub/1A-Database/LexiChem/CSV
 path_csv_mass_intervals = "/Users/etiennechollet/Desktop/GitHub/1A-Database/LexiChem/CSV_Mass_Intervals"
 path_master = "/Users/etiennechollet/Desktop/GitHub/1A-Database/LexiChem/CSV_Master/master.csv"
 
-
 def getSplitFiles():
     files = []
     for dirpath, dirnames, filenames in os.walk(path_csv_splits):
