@@ -97,16 +97,6 @@ def sortInterval(f):
     data = df_in.sort_values(by='Molecular_Weight')
 
 
-def masterCsv(f):
-    #skel_df = pd.DataFrame(columns=['Molecular_Formula', 'Molecular_Weight'])
-    #skel_df.to_csv(path_master, mode='w', header=True, index=False)
-
-    print(f"\nFor {f.split('/')[-1]}")
-    in_df = pd.read_csv(f)
-    #print(in_df)
-    in_df.to_csv(path_master, mode='a', header=True, index=False)
-
-
 class Master(object):
     def __init__(self):
         self.path = "/Users/etiennechollet/Desktop/GitHub/1A-Database/LexiChem/CSV_Master/master.csv"
