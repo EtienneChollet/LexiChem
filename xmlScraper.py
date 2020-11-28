@@ -24,7 +24,7 @@ class Scraper(object):
         self.cwd = os.path.dirname(__file__)
         self.path_splits = "/Users/etiennechollet/Desktop/GitHub/1A-Database/LexiChem/CSV_Splits"
 
-    def getIt(identifier):
+    def getIt(self, identifier):
         #identifier = 'Compound_029500001_030000000'
         if os.path.isfile(f'{self.cwd}/XMLGZ_Temp/{identifier}.xml.gz'): 
             pass
