@@ -30,6 +30,7 @@ def getSplitFiles():
     sorted_files = sorted(files)
     return sorted_files
 
+
 def getIntervalFiles():
     files = []
     for dirpath, dirnames, filenames in os.walk(path_csv_mass_intervals):
@@ -39,6 +40,7 @@ def getIntervalFiles():
     sorted_files = sorted(files)
     return sorted_files
 
+
 def csvSkeleton(a, b):
     """arg1 = Lower range of mass interval
     arg2 = Upper range of mass interval"""
@@ -46,6 +48,7 @@ def csvSkeleton(a, b):
     csv_name = f"{a}_{b}.csv"
     print(f'Made {csv_name}')
     df.to_csv(f'{path_csv_mass_intervals}/{csv_name}', mode='w', header=True, index=False)
+
 
 def sortInterval(f):
     df_in = pd.read_csv(f)
@@ -57,19 +60,35 @@ class Master(object):
         self.path = "/Users/etiennechollet/Desktop/GitHub/1A-Database/LexiChem/CSV_Master/master.csv"
 
     def refresh(self):
+        '''Empties contents from master.csv, leaving it with a skeleton having only column names'''
         skel_df = pd.DataFrame(columns=['Molecular_Formula', 'Molecular_Weight'])
         skel_df.to_csv(self.path, mode='w', header=True, index=False)
 
     def writer(self, f):
         print(f"\nFor {f.split('/')[-1]}")
         in_df = pd.read_csv(f)
-        #print(in_df)
         in_df.to_csv(self.path, mode='a', header=False, index=False)
+
+    def writeAll(self):
+        '''Similar to writer, but writes master.csv from all of the files in CSV_Splits.
+        \nCalling this function will first delete the data in master.csv'''
+        splits = Splits().files
+        
+        for i in splits:
+            self.writer(i)
 
     def sort(self):
         in_df = pd.read_csv(self.path)
         out_df = in_df.sort_values(by=['Molecular_Weight'])
         out_df.to_csv(self.path, mode='w', header=True, index=False)
+
+    def reader(self):
+        """returns a pandas dataframe from master.csv"""
+        df = pd.read_csv(self.path)
+        return df
+
+    def findRange(self, a, b):
+        '''Returns a dataframe of molecules whose mass is within the interval\na -> lower bound \nb -> upper bound'''
 
 
 class Intervals(object):
@@ -122,6 +141,7 @@ class Intervals(object):
 class Splits(object):
     def __init__(self):
         self.path = "/Users/etiennechollet/Desktop/GitHub/1A-Database/LexiChem/CSV_Splits"
+        self.files = self.files()
     
     def files(self):
         files = []
