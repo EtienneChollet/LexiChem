@@ -11,5 +11,4 @@ def updateDbase():
         cj.Intervals().write(i, 5)
 
 
-def xs.scraper():
     
