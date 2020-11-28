@@ -81,6 +81,7 @@ class Master(object):
         in_df = pd.read_csv(self.path)
         out_df = in_df.sort_values(by=['Molecular_Weight'])
         out_df.to_csv(self.path, mode='w', header=True, index=False)
+        return out_df
 
     def reader(self):
         """returns a pandas dataframe from master.csv"""
