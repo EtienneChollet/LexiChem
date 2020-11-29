@@ -48,7 +48,6 @@ class PubChem(object):
         return identifier
 
 
-
 class Scraper(PubChem):
 
     def __init__(self):
@@ -89,8 +88,7 @@ class Scraper(PubChem):
         formulas = []
         weights = []
 
-
-
+## Condense into classes
 def scraper(identifier):
     i = 0
     n = 0
