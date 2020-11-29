@@ -11,31 +11,91 @@ from urllib.request import urlopen
 import caffeine
 import pandas as pd
 from bs4 import BeautifulSoup
+
 caffeine.on(display=False)
-
-
 t0 = time()
 
-cwd = os.path.dirname(__file__)
-#print('\n',cwd)
-
-def getIt(identifier):
-    #identifier = 'Compound_029500001_030000000'
-    if os.path.isfile(f'{cwd}/XMLGZ_Temp/{identifier}.xml.gz'): 
-        pass
-    else:
-        url = f'ftp://ftp.ncbi.nlm.nih.gov/pubchem/Compound/CURRENT-Full/XML/{identifier}.xml.gz'
-        request.urlretrieve(url, f'{cwd}/XMLGZ_Temp/{identifier}.xml.gz')
-    return identifier
 
 
+class PubChem(object):
+
+    def __init__(self):
+        self.cwd = os.path.dirname(__file__)
+        self.path_xmlgz = f'{self.cwd}/XMLGZ_Temp'
+        self.url = 'ftp://ftp.ncbi.nlm.nih.gov/pubchem/Compound/CURRENT-Full/XML/'
+        self.files_pubchem = self.getFiles()
+
+
+    def getFiles(self):
+        '''Gets the names of all of files from the puchem database'''
+        opened = urlopen(self.url)
+        html = opened.read()
+        soup = BeautifulSoup(html, 'html.parser')
+
+        store = []
+        splits = str(soup).split(' ')
+        [store.append(i.split('.xml.gz')[0]) for i in splits if '.xml.gz' in i and '.md5' not in i]
+        return store
+
+
+    def getDownloadURL(self, identifier):
+        _url = f'ftp://ftp.ncbi.nlm.nih.gov/pubchem/Compound/CURRENT-Full/XML/{identifier}.xml.gz'
+        return(_url)
+
+
+    def download(self, identifier):
+        request.urlretrieve(self.url, f'{self.path_xmlgz}/{identifier}.xml.gz')
+        return identifier
+
+
+class Scraper(PubChem):
+
+    def __init__(self):
+        super().__init__()
+        self.path_csv_splits = '/Users/etiennechollet/Desktop/GitHub/1A-Database/EXPERIMENTAL_LexiChem/CSV_Splits'
+        self.files_already_have = self.filesAlreadyHave()
+        self.files_needed = self.filesNeeded()
+        #self.cwd = os.path.dirname(__file__)
+
+
+    def filesAlreadyHave(self):
+        '''Returns a list of files that have been mined already'''
+        lst = sorted(list(os.listdir(self.path_csv_splits)))[1:]
+        processed = [i.split('.csv')[0] for i in lst]
+        return processed
+
+
+    def filesNeeded(self):
+        store = [i for i in self.files_pubchem if i not in self.files_already_have]
+        return store
+
+
+    def downloadBatch(self, batch_size=5):
+        '''Downloads a batch of files from pubchem and returns their identities'''
+        store = []
+        for i in self.files_needed[:batch_size]:
+            #self.download(i)
+            store.append(i)
+        return store
+
+    ## revise this
+    def scrape(self, batch_size=5):
+        lst = self.downloadBatch(batch_size)
+        print(lst)
+        i = 0
+        n = 0
+        w = 0
+        formulas = []
+        weights = []
+
+## Condense into classes
 def scraper(identifier):
     i = 0
     n = 0
     w = 0
     formulas = []
     weights = []
-    xmlgz = f'{cwd}/XMLGZ_Temp/{getIt(identifier)}.xml.gz'
+    xmlgz = f'{cwd}/XMLGZ_Temp/{Scraper().scrape(identifier)}.xml.gz'
 
     ## Peeking into .xml.gz line by line
     with gzip.open(xmlgz, 'rb') as txt_file:
@@ -55,10 +115,7 @@ def scraper(identifier):
             if i == w:
                 soup = BeautifulSoup(line, 'html.parser')
                 weights.append(soup.text.strip('\n').split(' ').pop().strip("\\n'"))
-
-            #print(formulas)
             del line
-
 
     os.remove(xmlgz)
 
@@ -133,5 +190,3 @@ def run():
                 print('Killing Process...')
 
 run()
-
-#scraper('Compound_000000001_000500000')
